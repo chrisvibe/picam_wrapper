@@ -3,8 +3,8 @@
 # for f in pics/*; do mv "$f" $(echo $f | tr -d "_"); done
 
 fPattern=./pics/*.jpg
-aFile=time_lapse.mp4
-bFile=temp.mp4
+aFile=temp.mp4
+bFile=time_lapse.mp4
 sFile=enya2.mp3
 
 # ffmpeg -pattern_type glob -i "$fPattern" -i $sFile -framerate 20 -tune film $mFile
@@ -19,11 +19,14 @@ done
 # loop n times
 ffmpeg -f concat -i list.txt -c copy $bFile 
 
+# slow down vid
+ffmpeg -i $bFile -filter:v "setpts=3.0*PTS" $aFile 
+
 # add sound to looped video
-ffmpeg -i $bFile -i $sFile -codec copy $aFile 
+ffmpeg -i $aFile -i $sFile -codec copy $bFile 
 
 # playback
-cvlc --fullscreen $aFile vlc://quit
+cvlc --fullscreen $bFile vlc://quit
 
 # cleanup
 rm list.txt
