@@ -1,3 +1,4 @@
+mkdir -p pics
 rsync --rsh=ssh -u pi@192.168.1.227:/home/pi/picam_wrapper/pics/* ./pics
 for f in pics/*; do mv "$f" $(echo $f | tr -d "-"); done
 for f in pics/*; do mv "$f" $(echo $f | tr -d "_"); done
