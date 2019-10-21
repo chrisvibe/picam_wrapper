@@ -3,34 +3,37 @@
 # for f in pics/*; do mv "$f" $(echo $f | tr -d "_"); done
 
 fPattern=./pics/*.jpg
-aFile=temp.mp4
-bFile=time_lapse.mp4
-sFile=enya2.mp3
+mFile=time_lapse.mp4
+sFile=enya.mp3
 
 # ffmpeg -pattern_type glob -i "$fPattern" -i $sFile -framerate 20 -tune film $mFile
-ffmpeg -pattern_type glob -i "$fPattern" -framerate 20 -tune film $aFile
+ffmpeg -pattern_type glob -i "$fPattern" -framerate 20 -tune film temp1.mp4 
 
 # build concat list
 touch list.txt
 for i in {1..3}
-    do echo "file '$aFile'" >> list.txt
+    do echo "file 'temp1.mp4'" >> list.txt
 done
 
 # loop n times
-ffmpeg -f concat -i list.txt -c copy $bFile 
+ffmpeg -f concat -i list.txt -c copy temp2.mp4
 
 # slow down vid
-ffmpeg -i $bFile -filter:v "setpts=3.0*PTS" $aFile 
+ffmpeg -i temp2.mp4 -filter:v "setpts=3.0*PTS" temp3.mp4
+
 
 # add sound to looped video
-ffmpeg -i $aFile -i $sFile -codec copy $bFile 
-
-# playback
-cvlc --fullscreen $bFile vlc://quit
+ffmpeg -i temp3.mp4 -i $sFile -codec copy temp4.mp4 
 
 # cleanup
 rm list.txt
-rm temp.mp4
+rm temp1.mp4
+rm temp2.mp4
+rm temp3.mp4
+mv temp4.mp4 $mFile
+
+# playback
+cvlc --fullscreen $mFile vlc://quit
 
 # Useful?: 
 # for some reason changing the filenames between steps helps fix bugs
