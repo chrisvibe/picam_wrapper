@@ -1,3 +1,4 @@
-**/pics/*
 **/__pycache__/
-**/output.mp4
+**/*.jpg
+**/*.mp3
+**/*.mp4
