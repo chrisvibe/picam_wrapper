@@ -3,8 +3,9 @@ import RPi.GPIO as GPIO
 
 GPIO.setmode(GPIO.BOARD)
 
-trigger_pin = 11
-power_pin = 12
+# trigger pin is activ on low for safety
+trigger_pin = 11 # BCM 17 
+power_pin = 12 # BCM 18
 
 def set_pin(pin, state, setOutputMode=False):
     if setOutputMode:
@@ -14,17 +15,18 @@ def set_pin(pin, state, setOutputMode=False):
     else:
         GPIO.output(pin, GPIO.LOW)
 
-def charge(duration=12):
-    set_pin(trigger_pin, False, setOutputMode=True)
+def charge(duration=40):
+    set_pin(trigger_pin, True, setOutputMode=True)
     set_pin(power_pin, False, setOutputMode=True)
-    pwm = GPIO.PWM(power_pin, 100)
-    pwm.start(20)
+    # pwm = GPIO.PWM(power_pin, 100)
+    # pwm.start(40)
+    set_pin(power_pin, True)
     sleep(duration)
-    pwm.stop()
+    # pwm.stop()
     set_pin(power_pin, False)
 
 def trigger(delay=False):
-    set_pin(trigger_pin, True)
+    set_pin(trigger_pin, False)
     if delay:
         sleep(1/100)
 
