@@ -1,20 +1,19 @@
 from picamera import PiCamera
 from time import sleep
 from datetime import datetime
-import flash
 from threading import Thread
 
 
 def take_picture(pic_path='./pics/',
-                pic_format = 'jpg',
-                log_path = False,
-                log_data = False,
-                stamp_format='%Y-%m-%d_%H-%M-%S',
-                flash_mode = False,
-                rotation = 0,
-                resolution = (1024, 768),
-                stabilize_time = 2,  # s
-                ):
+                 pic_format='jpg',
+                 log_path=False,
+                 log_data=False,
+                 stamp_format='%Y-%m-%d_%H-%M-%S',
+                 flash_mode=False,
+                 rotation=0,
+                 resolution=(1024, 768),
+                 stabilize_time=2,  # s
+                 ):
 
     with PiCamera() as camera:
         # INITIALIZE
@@ -28,21 +27,22 @@ def take_picture(pic_path='./pics/',
 
         # TAKE PIC
         if flash_mode:
-            flash.charge()
+            # flash.charge()
             sleep(1/10)
-            Thread(target=flash.trigger).start()
-            Thread(target=camera.capture, args=(file_name,)).start()
+            # Thread(target=flash.trigger).start()
+            #Thread(target=camera.capture, args=(file_name,)).start()
             sleep(1)
-            flash.cleanup()
+            # flash.cleanup()
         else:
             camera.capture(file_name)
 
         # LOG EVENT
         if log_path:
             with open(log_path, 'a') as log_file:
-                    log_file.write(time_stamp + ' ' + str(log_data) + '\n')
+                log_file.write(time_stamp + ' ' + str(log_data) + '\n')
+
 
 if __name__ == '__main__':
-    take_picture(flash_mode = True)
+    take_picture(flash_mode=True)
     take_picture()
     print('picture taken!')
